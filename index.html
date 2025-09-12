@@ -1,30 +1,148 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Matt Elliott-Williams</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plain Text News</title>
+  <meta name="description" content="A fast, text‑first site inspired by NPR's text-only layout." />
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml" />
+  <style>
+    /*
+      A tiny, sturdy stylesheet to mimic text.npr.org’s vibe:
+      single column, generous type, no images, fast.
+    */
+
+    :root {
+      --bg: #ffffff;
+      --fg: #111111;
+      --muted: #4b5563; /* gray-600 */
+      --link: #0a58ca;  /* accessible blue */
+      --link-visited: #6f42c1; /* purple */
+      --maxw: 44rem; /* comfy reading width */
+      color-scheme: light dark;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #0b0b0b; --fg: #f2f2f2; --muted: #9ca3af; --link: #6ea8fe; --link-visited: #c4b5fd; }
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font: 16px/1.65 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    /* Layout */
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 1rem 1rem 4rem; }
+
+    /* Header */
+    header { border-bottom: 1px solid currentColor; }
+    header .brand { font-weight: 700; letter-spacing: 0.2px; }
+    header nav { margin-top: 0.25rem; }
+
+    /* Links */
+    a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+    a:visited { color: var(--link-visited); }
+    a:hover { text-decoration-thickness: 2px; }
+    a:focus-visible { outline: 2px dashed currentColor; outline-offset: 2px; }
+
+    /* Lists of headlines */
+    .headline-list { list-style: none; padding: 0; margin: 1rem 0 0; }
+    .headline-list li { padding: 0.5rem 0; }
+    .headline-list a { font-size: 1.0625rem; font-weight: 600; color: var(--fg); text-decoration: none; }
+    .headline-list a:hover { text-decoration: underline; }
+
+    /* Section headings */
+    h1, h2 { margin: 0; font-weight: 800; line-height: 1.2; }
+    h1 { font-size: clamp(1.375rem, 2.5vw + 1rem, 2rem); }
+    h2 { font-size: 1rem; color: var(--muted); font-weight: 700; margin-top: 1.5rem; border-top: 1px solid currentColor; padding-top: 0.75rem; }
+
+    /* Article page */
+    article h1 { margin-top: 0.5rem; }
+    article time { display: block; color: var(--muted); margin: 0.25rem 0 1rem; font-size: 0.9375rem; }
+    article p { margin: 0 0 1rem; }
+    article a { color: var(--link); }
+
+    /* Footer */
+    footer { margin-top: 2rem; border-top: 1px solid currentColor; padding-top: 0.75rem; color: var(--muted); font-size: 0.9375rem; }
+
+    /* Utility */
+    .sr-only { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    .spacer { height: 0.5rem; }
+
+    /* Print: keep it lean */
+    @media print {
+      a { color: inherit; text-decoration: underline; }
+      header, nav, footer { border: 0; }
+      .wrap { padding: 0; }
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1><a href="/">My Blog</a></h1>
-    <nav>
-      <a href="/">Home</a>
-      <a href="#about">About</a>
+  <a href="#content" class="sr-only">Skip to content</a>
+
+  <header class="wrap" role="banner">
+    <div class="brand">Plain Text News</div>
+    <nav aria-label="Utility">
+      <small>
+        <a href="/" aria-current="page">Home</a> ·
+        <a href="/topics">Topics</a> ·
+        <a href="/about">About</a> ·
+        <a href="/rss">RSS</a>
+      </small>
     </nav>
   </header>
 
-  <main>
-    <article>
-      <h2><a href="posts/sample-post.html">Sample Post</a></h2>
-      <p class="date">April 21, 2025</p>
-      <p>This is a short preview of my post. Read more by clicking the title.</p>
+  <main id="content" class="wrap" role="main">
+    <!-- Homepage layout: sections with dense, text-only links -->
+    <h1>Top Stories</h1>
+    <ul class="headline-list" role="list">
+      <li><a href="#">A very plain headline that respects your bandwidth</a></li>
+      <li><a href="#">Policy update, no photos, just the facts</a></li>
+      <li><a href="#">Science brief: three lines you can read at a glance</a></li>
+      <li><a href="#">Culture: an essay stripped of ornament, not meaning</a></li>
+    </ul>
+
+    <h2>U.S.</h2>
+    <ul class="headline-list" role="list">
+      <li><a href="#">Local news, national stakes</a></li>
+      <li><a href="#">Elections and civic life in text mode</a></li>
+    </ul>
+
+    <h2>World</h2>
+    <ul class="headline-list" role="list">
+      <li><a href="#">A quick dispatch with links to deeper reading</a></li>
+      <li><a href="#">Another headline, easy to scan</a></li>
+    </ul>
+
+    <h2>Opinion</h2>
+    <ul class="headline-list" role="list">
+      <li><a href="#">An argument that fits in your lunch break</a></li>
+      <li><a href="#">Column: clarity over spectacle</a></li>
+    </ul>
+
+    <div class="spacer"></div>
+
+    <!-- Example article block you can reuse for story pages -->
+    <article aria-labelledby="a-title">
+      <h1 id="a-title">Sample Article Title</h1>
+      <time datetime="2025-09-12">September 12, 2025</time>
+      <p>This is a demo paragraph for an article page. Keep sentences short, paragraphs shorter, and the load time shortest. That’s the whole trick.</p>
+      <p>If you want subheads, use <strong>&lt;h2&gt;</strong> and keep them quiet. If you need emphasis, go easy. Links like <a href="#">this</a> should always be clear and underlined.</p>
+      <p>Accessibility matters: semantic HTML, focusable links, and a readable line length go a long way.</p>
     </article>
+
+    <footer role="contentinfo">
+      <p>© <span id="y"></span> Plain Text News · <a href="/about">About</a> · <a href="/contact">Contact</a> · <a href="/rss">RSS</a></p>
+    </footer>
   </main>
 
-  <footer>
-    <p>&copy; 2025</p>
-  </footer>
+  <script>
+    // Tiny helper: current year in the footer.
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
