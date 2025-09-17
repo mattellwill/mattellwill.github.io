@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>L&D Constellation (6 stars)</title>
+<style>
+  :root{
+    --bg:#0b1020;
+    --ink:#e6f0ff;
+    --dim:#93a4c1;
+    --accent:#a8c7ff;
+    --line:rgba(168,199,255,.55);
+    --star:#ffffff;
+    --popover-bg:#111625;
+    --popover-border:#2a3352;
+    --radius:520; /* controls layout scale */
+  }
+
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f6f8ff;
+      --ink:#0e1730;
+      --dim:#3a4968;
+      --accent:#2b63ff;
+      --line:rgba(43,99,255,.35);
+      --star:#0e1730;
+      --popover-bg:#ffffff;
+      --popover-border:#d9e0ff;
+    }
+  }
+
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:radial-gradient(1200px 800px at 70% 20%, rgba(88,124,255,.08), transparent 60%), var(--bg);
+    color:var(--ink);
+    font:16px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+    display:grid;
+    place-items:center;
+  }
+
+  .wrap{
+    width:min(1100px, 100%);
+    padding:clamp(16px, 3vw, 32px);
+    display:grid;
+    gap:24px;
+  }
+
+  header h1{
+    margin:0 0 6px 0;
+    font-weight:700;
+    letter-spacing:.2px;
+  }
+  header p{margin:0;color:var(--dim);max-width:60ch;}
+
+  /* SVG canvas */
+  .sky{
+    width:100%;
+    background:
+      radial-gradient(900px 700px at 15% 85%, rgba(168,199,255,.10), transparent 60%),
+      radial-gradient(700px 500px at 80% 10%, rgba(168,199,255,.06), transparent 55%);
+    border-radius:16px;
+    border:1px solid rgba(168,199,255,.12);
+    position:relative;
+    overflow:hidden;
+    padding:8px;
+  }
+
+  /* Popovers */
+  .popover{
+    position:absolute;
+    min-width:240px;
+    max-width:320px;
+    background:var(--popover-bg);
+    border:1px solid var(--popover-border);
+    border-radius:12px;
+    padding:12px 14px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+    transform:translate(-50%,-120%);
+    display:none;
+  }
+  .popover h3{
+    margin:0 0 4px 0; font-size:15px; letter-spacing:.2px;
+  }
+  .popover p{
+    margin:0; color:var(--dim); font-size:14px;
+  }
+
+  /* Legend list (mobile fallback / accessibility) */
+  .legend{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+    gap:12px;
+  }
+  .legend li{
+    list-style:none;
+    border:1px solid rgba(168,199,255,.16);
+    border-radius:10px;
+    padding:10px 12px;
+    background:linear-gradient(180deg, rgba(168,199,255,.06), transparent);
+  }
+  .legend strong{display:block;}
+
+  /* Accessibility helpers */
+  .sr-only{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;}
+
+  /* Motion */
+  @media (prefers-reduced-motion: no-preference){
+    .twinkle { animation: twinkle 2.4s ease-in-out infinite; }
+    .floaty { animation: floaty 12s ease-in-out infinite; }
+    @keyframes twinkle { 50%{ opacity:.5; filter: drop-shadow(0 0 10px rgba(255,255,255,.6)); } }
+    @keyframes floaty { 50%{ transform: translateY(-2px); } }
+  }
+
+  /* Star buttons (for keyboard focus) */
+  .star-hit{
+    cursor:pointer;
+  }
+  .star-hit:focus{
+    outline: none;
+  }
+  .star-ring{
+    stroke: var(--accent);
+    stroke-width: 2;
+    opacity: 0;
+  }
+  .star-hit:focus + .star-ring,
+  .star-hit:focus-visible + .star-ring{
+    opacity: .9;
+  }
+</style>
+</head>
+<body>
+  <main class="wrap" aria-labelledby="t">
+    <header>
+      <h1 id="t">Your L&D Constellation</h1>
+      <p>Six points in orbit—intentionally <em>not closed</em>—threaded by practice: critical thinking, measurement, technology, business impact, employee learning & engagement, and learning philosophy.</p>
+    </header>
+
+    <!-- Accessible fallback list -->
+    <ul class="legend" aria-label="Constellation legend">
+      <li><strong>Critical Thinking</strong><span> • Questions that clarify, not combust.</span></li>
+      <li><strong>Measurement</strong><span> • Evidence that changes minds, not just metrics.</span></li>
+      <li><strong>Technology</strong><span> • Tools in service of teaching, not vice versa.</span></li>
+      <li><strong>Business Impact</strong><span> • Learning tied to outcomes, honestly.</span></li>
+      <li><strong>Employee Learning & Engagement</strong><span> • People first, then platforms.</span></li>
+      <li><strong>Learning Philosophy</strong><span> • A north star for decisions.</span></li>
+    </ul>
+
+    <section class="sky" aria-label="Interactive sky">
+      <!-- Inline SVG so we can style and wire it -->
+      <svg viewBox="-600 -420 1200 750" role="img" aria-labelledby="const-desc" width="100%" height="auto">
+        <title id="const-desc">Six-star open-arc constellation representing an L&D strategy.</title>
+        <defs>
+          <radialGradient id="glow" r="60%">
+            <stop offset="0%" stop-color="white" stop-opacity="1"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="soft">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="b"/>
+            <feMerge>
+              <feMergeNode in="b"/><feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- Guide arc (open gap ~30 degrees) -->
+        <path d="M -470,0 A 470 470 0 0 1 470,0"
+              fill="none" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="8 6" class="floaty"/>
+
+        <!-- Connections (skip one segment to keep the system open) -->
+        <g stroke="var(--line)" stroke-width="1.75" filter="url(#soft)" stroke-linecap="round" aria-hidden="true">
+          <!-- Order: CT -> MEAS -> TECH -> IMPACT -> ENGAGE -> PHIL  (no closing line back to CT) -->
+          <line x1="-360" y1="-40" x2="-160" y2="-160"/>
+          <line x1="-160" y1="-160" x2="60" y2="-170"/>
+          <line x1="60" y1="-170" x2="290" y2="-90"/>
+          <line x1="290" y1="-90" x2="360" y2="40"/>
+          <line x1="360" y1="40" x2="80" y2="110"/>
+          <!-- No line from PHIL back to CT (keeps it open) -->
+        </g>
+
+        <!-- Stars (positions chosen along the arc; adjust as you like) -->
+        <!-- Each star has: invisible button for focus/hover + focus ring + visible star circle + label -->
+        <!-- 1. Critical Thinking -->
+        <g data-name="Critical Thinking"
+           data-desc="Questions that clarify, not combust."
+           data-left="-360" data-top="-40">
+          <circle class="star-hit" r="18" cx="-360" cy="-40" fill="transparent" tabindex="0" />
+          <circle class="star-ring" r="22" cx="-360" cy="-40" fill="none" />
+          <circle r="4.5" cx="-360" cy="-40" fill="var(--star)" style="filter:drop-shadow(0 0 5px rgba(255,255,255,.8))"/>
+          <text x="-360" y="-64" text-anchor="middle" font-size="12" fill="var(--dim)">Critical Thinking</text>
+        </g>
+
+        <!-- 2. Measurement -->
+        <g data-name="Measurement"
+           data-desc="Evidence that changes minds, not just metrics."
+           data-left="-160" data-top="-160">
+          <circle class="star-hit" r="18" cx="-160" cy="-160" fill="transparent" tabindex="0" />
+          <circle class="star-ring" r="22" cx="-160" cy="-160" fill="none" />
+          <circle r="4.5" cx="-160" cy="-160" fill="var(--star)" class="twinkle"/>
+          <text x="-160" y="-184" text-anchor="middle" font-size="12" fill="var(--dim)">Measurement</text>
+        </g>
+
+        <!-- 3. Technology -->
+        <g data-name="Technology"
+           data-desc="Tools in service of teaching, not vice versa."
+           data-left="60" data-top="-170">
+          <circle class="star-hit" r="18" cx="60" cy="-170" fill="transparent" tabindex="0" />
+          <circle class="star-ring" r="22" cx="60" cy="-170" fill="none" />
+          <circle r="4.5" cx="60" cy="-170" fill="var(--star)" />
+          <text x="60" y="-194" text-anchor="middle" font-size="12" fill="var(--dim)">Technology</text>
+        </g>
+
+        <!-- 4. Business Impact -->
+        <g data-name="Business Impact"
+           data-desc="Learning tied to outcomes, honestly."
+           data-left="290" data-top="-90">
+          <circle class="star-hit" r="18" cx="290" cy="-90" fill="transparent" tabindex="0" />
+          <circle class="star-ring" r="22" cx="290" cy="-90" fill="none" />
+          <circle r="4.5" cx="290" cy="-90" fill="var(--star)" class="twinkle" />
+          <text x="290" y="-114" text-anchor="middle" font-size="12" fill="var(--dim)">Business Impact</text>
+        </g>
+
+        <!-- 5. Employee Learning & Engagement -->
+        <g data-name="Employee Learning & Engagement"
+           data-desc="People first, then platforms."
+           data-left="360" data-top="40">
+          <circle class="star-hit" r="18" cx="360" cy="40" fill="transparent" tabindex="0" />
+          <circle class="star-ring" r="22" cx="360" cy="40" fill="none" />
+          <circle r="4.5" cx="360" cy="40" fill="var(--star)" />
+          <text x="360" y="16" text-anchor="middle" font-size="12" fill="var(--dim)" >Learning & Engagement</text>
+        </g>
+
+        <!-- 6. Learning Philosophy -->
+        <g data-name="Learning Philosophy"
+           data-desc="A north star for decisions."
+           data-left="80" data-top="110">
+          <circle class="star-hit" r="18" cx="80" cy="110" fill="transparent" tabindex="0" />
+          <circle class="star-ring" r="22" cx="80" cy="110" fill="none" />
+          <circle r="4.5" cx="80" cy="110" fill="var(--star)" />
+          <text x="80" y="134" text-anchor="middle" font-size="12" fill="var(--dim)">Learning Philosophy</text>
+        </g>
+      </svg>
+
+      <!-- Popover (single; we move it near the active star) -->
+      <div class="popover" id="pop" role="dialog" aria-modal="false" aria-live="polite">
+        <h3 id="pop-title">Title</h3>
+        <p id="pop-desc">Description</p>
+      </div>
+    </section>
+  </main>
+
+<script>
+(function(){
+  const sky = document.querySelector('.sky');
+  const pop = document.getElementById('pop');
+  const title = document.getElementById('pop-title');
+  const desc = document.getElementById('pop-desc');
+
+  function showPopover(target){
+    const g = target.closest('g');
+    if(!g) return hidePopover();
+
+    title.textContent = g.dataset.name;
+    desc.textContent = g.dataset.desc;
+
+    // Position popover using data-left/top set on the group
+    const left = Number(g.dataset.left) || 0;
+    const top = Number(g.dataset.top) || 0;
+
+    // Convert SVG coords to CSS position relative to .sky
+    // We know the viewBox: -600..+600 (x) and -420..+330 (y)
+    // Map to element client box:
+    const svg = sky.querySelector('svg');
+    const vb = svg.viewBox.baseVal;
+
+    const rect = svg.getBoundingClientRect();
+    const xPct = (left - vb.x) / vb.width;
+    const yPct = (top - vb.y) / vb.height;
+
+    pop.style.left = (xPct * rect.width + 8) + 'px';
+    pop.style.top  = (yPct * rect.height + 8) + 'px';
+    pop.style.display = 'block';
+  }
+
+  function hidePopover(){
+    pop.style.display = 'none';
+  }
+
+  // Hover & focus interactions
+  sky.addEventListener('pointerover', (e)=>{
+    if(e.target.classList.contains('star-hit')) showPopover(e.target);
+  });
+  sky.addEventListener('pointerout', (e)=>{
+    if(e.relatedTarget && e.relatedTarget.closest('#pop')) return;
+    hidePopover();
+  });
+  sky.addEventListener('focusin', (e)=>{
+    if(e.target.classList.contains('star-hit')) showPopover(e.target);
+  });
+  sky.addEventListener('focusout', (e)=>{
+    // Small delay so tabbing to next star doesn't flicker
+    setTimeout(()=>{
+      const active = document.activeElement;
+      if(!active || !active.classList || !active.classList.contains('star-hit')) hidePopover();
+    }, 0);
+  });
+
+  // Click toggles popover persistence
+  sky.addEventListener('click', (e)=>{
+    if(e.target.classList.contains('star-hit')){
+      if(pop.style.display === 'block'){
+        hidePopover();
+      }else{
+        showPopover(e.target);
+      }
+    }
+  });
+
+  // Hide popover if user taps elsewhere
+  document.addEventListener('click', (e)=>{
+    if(!e.target.closest('.sky') && !e.target.closest('#pop')) hidePopover();
+  });
+
+})();
+</script>
+</body>
+</html>
