@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beethoven's Egmont — An Imaginary Reading</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inconsolata:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --bg2: #111116;
+    --bg3: #16161d;
+    --surface: #1a1a24;
+    --surface2: #20202e;
+    --border: #2a2a3a;
+    --border2: #333348;
+    --accent: #c89b5a;
+    --accent2: #e8c87a;
+    --accent3: #9b7a3a;
+    --text: #d8d4c8;
+    --text2: #a09890;
+    --text3: #706860;
+    --red: #c05858;
+    --blue: #6a8ab8;
+    --green: #7a9a68;
+    --purple: #8a6ab8;
+    --sidebar: 280px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.75;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* SIDEBAR */
+  #sidebar {
+    width: var(--sidebar);
+    min-width: var(--sidebar);
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #sidebar-header {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  #sidebar-header .title-small {
+    font-family: 'Inconsolata', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  #sidebar-header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text);
+  }
+
+  #sidebar-header .author {
+    font-size: 13px;
+    color: var(--text3);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  #toc {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+
+  .toc-section {
+    padding: 0 8px;
+    margin-bottom: 4px;
+  }
+
+  .toc-section-label {
+    font-family: 'Inconsolata', monospace;
+    font-size: 8px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 8px 12px 4px;
+  }
+
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+
+  .toc-item:hover {
+    background: var(--surface);
+    border-color: var(--border);
+  }
+
+  .toc-item.active {
+    background: var(--surface2);
+    border-color: var(--border2);
+  }
+
+  .toc-item.active .toc-dot {
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent3);
+  }
+
+  .toc-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border2);
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .toc-item .toc-text {
+    font-family: 'EB Garamond', serif;
+    font-size: 13.5px;
+    color: var(--text2);
+    line-height: 1.3;
+  }
+
+  .toc-item.active .toc-text {
+    color: var(--text);
+  }
+
+  .toc-sub {
+    padding-left: 20px;
+  }
+
+  .toc-sub .toc-dot {
+    width: 4px;
+    height: 4px;
+  }
+
+  .toc-sub .toc-text {
+    font-size: 12.5px;
+  }
+
+  /* TOOLS PANEL */
+  #tools-panel {
+    border-top: 1px solid var(--border);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .tool-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    font-family: 'Inconsolata', monospace;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    transition: all 0.15s;
+    text-align: left;
+  }
+
+  .tool-btn:hover {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border2);
+  }
+
+  .tool-btn.active {
+    background: var(--surface2);
+    color: var(--accent);
+    border-color: var(--accent3);
+  }
+
+  .tool-icon {
+    font-size: 13px;
+  }
+
+  /* MAIN CONTENT */
+  #main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  #topbar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  #breadcrumb {
+    font-family: 'Inconsolata', monospace;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    color: var(--text3);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  #breadcrumb span { color: var(--accent); }
+
+  #view-controls {
+    display: flex;
+    gap: 4px;
+  }
+
+  .view-btn {
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text3);
+    font-family: 'Inconsolata', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .view-btn:hover, .view-btn.active {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border2);
+  }
+
+  /* CONTENT AREA */
+  #content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 48px 64px;
+    max-width: 860px;
+    margin: 0 auto;
+    width: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+
+  /* PAGE SECTIONS */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* TYPOGRAPHY */
+  .chapter-label {
+    font-family: 'Inconsolata', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  h2.chapter-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+
+  h2.chapter-title em {
+    font-style: italic;
+    color: var(--accent2);
+  }
+
+  .chapter-subtitle {
+    font-family: 'EB Garamond', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: var(--text3);
+    margin-bottom: 32px;
+  }
+
+  .divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), var(--border2), var(--border), transparent);
+    margin: 32px 0;
+  }
+
+  p { margin-bottom: 1.1em; }
+
+  h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 32px 0 14px;
+    letter-spacing: 0.2px;
+  }
+
+  h4 {
+    font-family: 'Inconsolata', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 24px 0 10px;
+  }
+
+  blockquote {
+    border-left: 2px solid var(--accent3);
+    padding: 12px 20px;
+    margin: 24px 0;
+    background: var(--bg3);
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+    color: var(--text2);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  blockquote cite {
+    display: block;
+    font-size: 13px;
+    font-style: normal;
+    color: var(--text3);
+    margin-top: 8px;
+    font-family: 'Inconsolata', monospace;
+  }
+
+  .term {
+    color: var(--accent2);
+    font-style: italic;
+    cursor: pointer;
+    border-bottom: 1px dotted var(--accent3);
+    transition: color 0.15s;
+  }
+
+  .term:hover { color: var(--accent); }
+
+  /* CALLOUT BOXES */
+  .callout {
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 28px 0;
+    background: var(--bg3);
+    position: relative;
+  }
+
+  .callout::before {
+    content: attr(data-type);
+    font-family: 'Inconsolata', monospace;
+    font-size: 8px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    position: absolute;
+    top: -1px;
+    left: 16px;
+    background: var(--bg3);
+    padding: 0 6px;
+    transform: translateY(-50%);
+  }
+
+  .callout.concept { border-color: var(--blue); }
+  .callout.concept::before { color: var(--blue); }
+
+  .callout.remy { border-color: var(--purple); }
+  .callout.remy::before { color: var(--purple); }
+
+  .callout.history { border-color: var(--red); }
+  .callout.history::before { color: var(--red); }
+
+  .callout.summary { border-color: var(--green); }
+  .callout.summary::before { color: var(--green); }
+
+  .callout-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .callout.concept .callout-title { color: var(--blue); }
+  .callout.remy .callout-title { color: var(--purple); }
+  .callout.history .callout-title { color: var(--red); }
+  .callout.summary .callout-title { color: var(--green); }
+
+  .callout p { margin-bottom: 0.5em; font-size: 15.5px; line-height: 1.65; }
+
+  /* GLOSSARY */
+  #glossary-panel {
+    display: none;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 340px;
+    height: 100vh;
+    background: var(--bg2);
+    border-left: 1px solid var(--border);
+    z-index: 100;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: -8px 0 24px rgba(0,0,0,0.4);
+    animation: slideIn 0.2s ease;
+  }
+
+  #glossary-panel.open { display: flex; }
+
+  @keyframes slideIn {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  #glossary-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  #glossary-header h3 {
+    font-family: 'Inconsolata', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0;
+  }
+
+  #glossary-close {
+    background: none;
+    border: none;
+    color: var(--text3);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+  #glossary-close:hover { background: var(--surface); color: var(--text); }
+
+  #glossary-search {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  #glossary-search input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: var(--text);
+    font-family: 'Inconsolata', monospace;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  #glossary-search input:focus { border-color: var(--accent3); }
+  #glossary-search input::placeholder { color: var(--text3); }
+
+  #glossary-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+
+  .glossary-entry {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+
+  .glossary-entry:hover { background: var(--surface); }
+
+  .glossary-term {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent2);
+    margin-bottom: 4px;
+  }
+
+  .glossary-def {
+    font-size: 13.5px;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+
+  .glossary-tag {
+    display: inline-block;
+    font-family: 'Inconsolata', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-top: 6px;
+  }
+
+  .tag-theory { background: rgba(106,138,184,0.15); color: var(--blue); }
+  .tag-history { background: rgba(192,88,88,0.15); color: var(--red); }
+  .tag-agency { background: rgba(138,106,184,0.15); color: var(--purple); }
+  .tag-method { background: rgba(122,154,104,0.15); color: var(--green); }
+
+  /* TIMELINE */
+  .timeline {
+    margin: 28px 0;
+    position: relative;
+    padding-left: 24px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, var(--border2), var(--border2), transparent);
+  }
+
+  .timeline-event {
+    position: relative;
+    margin-bottom: 20px;
+    padding-left: 16px;
+  }
+
+  .timeline-event::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 8px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--border2);
+    border: 1px solid var(--border2);
+  }
+
+  .timeline-event.key::before {
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent3);
+    border-color: var(--accent);
+  }
+
+  .timeline-year {
+    font-family: 'Inconsolata', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    margin-bottom: 2px;
+  }
+
+  .timeline-event p {
+    font-size: 14px;
+    color: var(--text2);
+    margin: 0;
+  }
+
+  /* PROGRESS BAR */
+  #progress-bar {
+    height: 2px;
+    background: var(--border);
+    position: relative;
+  }
+
+  #progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent3), var(--accent));
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  /* SUMMARY CARDS */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .summary-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+    transition: border-color 0.15s;
+  }
+
+  .summary-card:hover { border-color: var(--border2); }
+
+  .summary-card-label {
+    font-family: 'Inconsolata', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+
+  .summary-card-content {
+    font-size: 14.5px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  /* REMY NARRATIVE */
+  .remy-narrative {
+    background: linear-gradient(135deg, #1a1428 0%, #141220 100%);
+    border: 1px solid rgba(138,106,184,0.3);
+    border-radius: 8px;
+    padding: 24px;
+    margin: 28px 0;
+    font-style: italic;
+    color: #c0b8d8;
+    line-height: 1.8;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .remy-narrative::before {
+    content: 'REMY SEQUENCE';
+    font-family: 'Inconsolata', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: var(--purple);
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    opacity: 0.7;
+  }
+
+  .remy-annotation {
+    font-style: normal;
+    color: rgba(138,106,184,0.7);
+    font-size: 14px;
+    font-style: italic;
+    margin: 12px 0;
+    padding-left: 16px;
+    border-left: 2px solid rgba(138,106,184,0.3);
+  }
+
+  /* SCROLL ANIMATION */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: fadeIn 0.4s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* FOOTER NAV */
+  #footer-nav {
+    border-top: 1px solid var(--border);
+    padding: 16px 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg2);
+    flex-shrink: 0;
+  }
+
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    font-family: 'EB Garamond', serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .nav-btn:hover {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border2);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  #page-indicator {
+    font-family: 'Inconsolata', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 1px;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <div class="title-small">Dissertation · UB 2021</div>
+    <h1>Beethoven's <em style="font-style:italic;color:var(--accent)">Egmont</em></h1>
+    <div class="author">Matthew Williams · PhD</div>
+  </div>
+  <div id="toc">
+    <div class="toc-section">
+      <div class="toc-section-label">Front Matter</div>
+      <div class="toc-item active" data-page="abstract" onclick="navigate('abstract')">
+        <div class="toc-dot"></div>
+        <div class="toc-text">Abstract & Overview</div>
+      </div>
+      <div class="toc-item" data-page="preface" onclick="navigate('preface')">
+        <div class="toc-dot"></div>
+        <div class="toc-text">Preface</div>
+      </div>
+      <div class="toc-item" data-page="timeline" onclick="navigate('timeline')">
+        <div class="toc-dot"></div>
+        <div class="toc-text">Low Countries Timeline</div>
+      </div>
+    </div>
+    <div class="toc-section">
+      <div class="toc-section-label">Chapter 1</div>
+      <div class="toc-item" data-page="ch1-surface" onclick="navigate('ch1-surface')">
+        <div class="toc-dot"></div>
+        <div class="toc-text">The Musical Surface</div>
+      </div>
+      <div class="toc-item toc-sub" data-page="ch1-pcx" onclick="navigate('ch1-pcx')">
+        <div class="toc-dot"></div>
+        <div class="toc-text">Pitch-Class Counterpoint (PCX)</div>
+      </div>
+      <div class="toc-item toc-sub" data-page="ch1-mops" onclick="navigate('ch1-mops')">
+        <div class="toc-dot"></div>
+        <div class="toc-text">Maximal Outerplanar Graphs</div>
+      </div>
+      <div class="toc-item toc-sub" data-page="ch1-agency" onclick="navigate('ch1-agency')">
+        <div class="toc-dot"></div>
+        <div class="toc-text">Musical Agency</div>
+      </div>
+      <div class="toc-item toc-sub" data-page="ch1-remy" onclick="navigate('ch1-remy')">
+        <div class="toc-dot"></div>
+        <div class="toc-text">REMY — The Machine</div>
+      </div>
+    </div>
+    <div class="toc-section">
+      <div class="toc-section-label">Chapter 2</div>
+      <div class="toc-item" data-page="ch2-intro" onclick="navigate('ch2-intro')">
+        <div class="toc-dot"></div>
+        <div class="toc-text">Egmont &amp; Egmont</div>
+      </div>
+      <div class="toc-item toc-sub" data-page="ch2-history" onclick="navigate('ch2-history')">
+        <div class="toc-dot"></div>
+        <div class="toc-text">Historical Context</div>
+      </div>
+      <div class="toc-item toc-sub" data-page="ch2-introduction" onclick="navigate('ch2-introduction')">
+        <div class="toc-dot"></div>
+        <div class="toc-text">Overture Introduction</div>
+      </div>
+      <div class="toc-item toc-sub" data-page="ch2-exposition" onclick="navigate('ch2-exposition')">
+        <div class="toc-dot"></div>
+        <div class="toc-text">Exposition &amp; Beeldenstorm</div>
+      </div>
+    </div>
+    <div class="toc-section">
+      <div class="toc-section-label">Reference</div>
+      <div class="toc-item" data-page="glossary-page" onclick="navigate('glossary-page')">
+        <div class="toc-dot"></div>
+        <div class="toc-text">Key Terms Index</div>
+      </div>
+    </div>
+  </div>
+  <div id="tools-panel">
+    <button class="tool-btn" onclick="toggleGlossary()" id="glossary-toggle">
+      <span class="tool-icon">◈</span> Quick Glossary
+    </button>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+  <div id="topbar">
+    <div id="breadcrumb">
+      <span id="bc-section">Front Matter</span> / <span id="bc-page">Abstract & Overview</span>
+    </div>
+    <div id="view-controls">
+      <button class="view-btn active" onclick="">Read</button>
+    </div>
+  </div>
+  <div id="progress-bar"><div id="progress-fill"></div></div>
+
+  <div id="content">
+
+    <!-- ABSTRACT PAGE -->
+    <div class="page active" id="page-abstract">
+      <span class="chapter-label">Dissertation Overview</span>
+      <h2 class="chapter-title">Beethoven's <em>Egmont</em>, Count Egmont</h2>
+      <div class="chapter-subtitle">An Imaginary Reading of Beethoven's Overture</div>
+      <hr class="divider">
+
+      <div class="callout summary" data-type="Core Argument">
+        <div class="callout-title">What This Dissertation Argues</div>
+        <p>Scholarship on Beethoven's <em>Egmont</em> overture has systematically overlooked the drama living at the musical surface — the immediate, moment-to-moment play of harmony, counterpoint, and rhythm. Rather than excavating deep structural hierarchies (Schenkerian analysis) or tracking organic motivic development (Schoenbergian <span class="term" onclick="showDef('grundgestalt')">Grundgestalt</span>), this dissertation develops a surface-first theory of analysis that treats the score's ink as the primary site of musical drama.</p>
+      </div>
+
+      <h3>The Dissertation in Three Moves</h3>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-card-label">Move 1 — Method</div>
+          <div class="summary-card-content">Two new analytical tools are developed: <span class="term" onclick="showDef('pcx')">Pitch-Class Counterpoint (PCX)</span> and <span class="term" onclick="showDef('mops')">Maximal Outerplanar Graphs (MOPs)</span>. Together they illuminate surface harmony without deferring to large-scale structural claims.</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-label">Move 2 — Agency</div>
+          <div class="summary-card-content">Musical elements are understood not as mechanical forces but as agents with intent. Drawing on Monahan, Maus, and Lewin, the dissertation develops a theory of <span class="term" onclick="showDef('agency')">musical agency</span> suited to surface-level analysis.</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-label">Move 3 — REMY</div>
+          <div class="summary-card-content">A fictional mixed-reality machine called <span class="term" onclick="showDef('remy')">REMY</span> (Reactive-Environment-Musical-You) fuses PCX, MOPs, and agency into immersive second-person analytical narratives set in 16th-century Brussels during the Dutch Revolt.</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-label">Move 4 — Reinterpretation</div>
+          <div class="summary-card-content">The standard "victorious" reading of the overture's major-mode coda is challenged. Instead the coda is reread as a <em>stadsvrede</em> — an imposed peace — reflecting the tyranny of the Duke of Alba rather than genuine victory.</div>
+        </div>
+      </div>
+
+      <h3>Methodological Stance</h3>
+      <p>This project stakes out a position in tension with two dominant modes of analysis. Against Schenkerian methods, which privilege deeply-embedded hierarchical events over surface phenomena, it insists that what is <em>most immediately present</em> in the score deserves sustained analytical attention. Against Schoenbergian motivic analysis, which tracks organic outgrowths of a <span class="term" onclick="showDef('grundgestalt')">Grundgestalt</span>, it resists the teleological pull toward a central "seed."</p>
+
+      <blockquote>
+        "Rather than deferring to sub-surface musical events, I highlight the drama often missed in traditional large-scale analysis using hyper-focused, shallow-level technologies unified with agency."
+        <cite>— Dissertation Abstract</cite>
+      </blockquote>
+
+      <p>The philosophical touchstone for this orientation is Susan Sontag's skepticism toward interpretation in <em>Against Interpretation</em> — and yet the project is itself deeply interpretive, committed not to stripping away meaning but to finding it at the surface rather than beneath it.</p>
+
+      <h3>A Note on the Second Person</h3>
+      <p>Throughout the analytical chapters, the reader is addressed as "you." Following David Lewin's theatrical analyses and Michel Butor's second-person novel <em>La Modification</em>, second-person narration collapses the distance between analyst and musical event. When you read these passages, <em>you</em> become the agent moving through the musical surface.</p>
+    </div>
+
+    <!-- PREFACE PAGE -->
+    <div class="page" id="page-preface">
+      <span class="chapter-label">Preface</span>
+      <h2 class="chapter-title">Why Beethoven? Why the Surface?</h2>
+      <hr class="divider">
+
+      <p>The preface establishes the project's fundamental vocabulary and stakes its methodological commitments with unusual directness. Williams begins with the obvious question any dissertation faces — why this composer? — and answers it by noting Beethoven's analytical flexibility: 400+ doctoral dissertations, an endlessly familiar repertoire, and a composer whose very ubiquity enables genuinely new insights.</p>
+
+      <div class="callout concept" data-type="Key Concept">
+        <div class="callout-title">What is "the Musical Surface"?</div>
+        <p>The surface is defined narrowly: all the ink on the score — but specifically notes and chords, counterpoint and harmony. It excludes timbre, orchestration, performance, and reception. The metaphor used is geological: the Earth's crust, which supports all of civilization, has its own depth and complexity that is distinct from the mantle beneath. Musical depth, for Williams, is not found by drilling down to Schenkerian bedrock — it's found by dwelling in the crust itself.</p>
+      </div>
+
+      <p>The original subtitle — "A Historical Reading of the Musical Surface" — was eventually replaced, on the advice of committee member Dr. Currie, with "An Imaginary Reading of Beethoven's Overture." The shift from "historical" to "imaginary" is significant: it signals that what follows is one reading among infinitely many possible readings, not a claim to recover what Beethoven intended.</p>
+
+      <blockquote>
+        "I am expressing what ultimately are my analytical values: repeat listening, infinite interpretation and connectivity, and most importantly, never 'finishing' an analysis."
+        <cite>— Preface</cite>
+      </blockquote>
+
+      <p>The preface closes by positioning the project in a productive tension with Sontag: even as the project agrees that interpretation can become dissatisfaction with a work, it maintains that looking closely at the surface — attending to the "as-is" — is a form of fidelity to the music rather than an act of replacement.</p>
+    </div>
+
+    <!-- TIMELINE PAGE -->
+    <div class="page" id="page-timeline">
+      <span class="chapter-label">Historical Context</span>
+      <h2 class="chapter-title">Low Countries Timeline</h2>
+      <div class="chapter-subtitle">1430–1581: The World Behind Beethoven's Overture</div>
+      <hr class="divider">
+
+      <p>Beethoven's <em>Egmont</em> overture is incidental music to Goethe's 1787 play about Count Egmont, a Flemish nobleman executed in 1568 for his opposition to Spanish Catholic rule. Understanding the historical events the overture dramatizes is essential to Chapter 2's reinterpretation of the coda.</p>
+
+      <div class="timeline">
+        <div class="timeline-event">
+          <div class="timeline-year">1430</div>
+          <p>Establishment of the <strong>Order of the Golden Fleece</strong> — a vehicle for acculturating regional nobility into the Burgundian political orbit. This becomes the model for the later "League" of grand seigneurs.</p>
+        </div>
+        <div class="timeline-event key">
+          <div class="timeline-year">1519</div>
+          <p><strong>Lutheranism arrives</strong> in the Low Countries — beginning the slow crack in Catholic hegemony that the monarchy will spend decades trying to suppress.</p>
+        </div>
+        <div class="timeline-event">
+          <div class="timeline-year">1549–1555</div>
+          <p>Charles V's <strong>Joyous Entries</strong> and abdication to Philip II. The Joyous Entry — originally a contractual rite — increasingly becomes a religious spectacle imbued with divine authority.</p>
+        </div>
+        <div class="timeline-event">
+          <div class="timeline-year">1559</div>
+          <p>Philip II leaves Brussels for Spain, never returning. <strong>Margaret of Parma</strong> is left as de facto governor. The stage is set for governing from a distance.</p>
+        </div>
+        <div class="timeline-event">
+          <div class="timeline-year">1563–1565</div>
+          <p>Formation of the grand seigneurs' <strong>"The League"</strong> and then the lower-noble <strong>Order of the Compromise</strong> (later "The Beggars"). These groups represent two tiers of nobility pushing back against Spanish religious control.</p>
+        </div>
+        <div class="timeline-event key">
+          <div class="timeline-year">April 1566</div>
+          <p>The <strong>Order of the Compromise submits its petition</strong> to Margaret of Parma during Palm Sunday weekend — a deliberate appropriation of the monarchial ritual of the Joyous Entry. Margaret concedes. This event is the direct model for Beethoven's introduction.</p>
+        </div>
+        <div class="timeline-event key">
+          <div class="timeline-year">August 1566</div>
+          <p>The <strong>Beeldenstorm</strong> — the "Wonder Year" of iconoclasm. Calvinist mobs destroy Catholic church objects, statues, and artwork across the Low Countries. The overture's primary and secondary themes are read against this event.</p>
+        </div>
+        <div class="timeline-event key">
+          <div class="timeline-year">June 5, 1568</div>
+          <p><strong>Count Egmont is executed</strong> — a high-profile warning against heresy and government disobedience, despite his Catholicism and nobility. The event marks the failure of moderate reform.</p>
+        </div>
+        <div class="timeline-event">
+          <div class="timeline-year">1581</div>
+          <p><strong>Philip II's abjuration of the throne</strong> — eventual, formal Dutch independence. Too late for Egmont.</p>
+        </div>
+      </div>
+
+      <div class="callout history" data-type="Historical Key">
+        <div class="callout-title">The Beeldenstorm and the Coda Problem</div>
+        <p>The central historical argument of the dissertation concerns the overture's coda, traditionally heard as a triumphant "Victory Symphony." Williams argues this reading ignores the historical record: Count Egmont was <em>executed</em>. Duke Alba's subsequent reign was one of brutal repression. The major-mode coda, viewed through this lens, represents not triumph but a <em>stadsvrede</em> — an imposed peace, false peace, the sound of tyranny wearing the costume of celebration.</p>
+      </div>
+    </div>
+
+    <!-- CH1 SURFACE PAGE -->
+    <div class="page" id="page-ch1-surface">
+      <span class="chapter-label">Chapter 1 · Part 1</span>
+      <h2 class="chapter-title">Exploring the Musical Surface</h2>
+      <div class="chapter-subtitle">"Well everyone knows Custer died at Little Bighorn. What this book presupposes is, maybe he didn't?" — Eli Cash, <em>The Royal Tenenbaums</em></div>
+      <hr class="divider">
+
+      <p>Chapter 1 opens with this Wes Anderson epigraph because the dissertation's central gesture is analogous: everyone knows the Egmont overture ends in triumph. What this dissertation presupposes is, maybe it doesn't. More broadly: what analytical music theory takes for granted as "deep" or "structural" may in fact be an ideological assumption about where musical meaning lives.</p>
+
+      <h3>The Problem with Depth</h3>
+      <p>The chapter opens with a diagnosis of what's been lost in Beethoven analysis. Using David Epstein's influential analysis of the Eroica's opening theme as a case study, Williams demonstrates how even excellent analysts systematically <em>defer</em> surface observations to serve larger structural claims.</p>
+
+      <blockquote>
+        "The triad-derived and half-step-derived segments of the first theme are the predominant shapes underlying this theme and all subsequent themes."
+        <cite>— David Epstein, <em>Beyond Orpheus</em> (1979)</cite>
+      </blockquote>
+
+      <p>Epstein's analysis is brilliant but, Williams argues, it sacrifices the Cs in measure 7 of the Eroica on the altar of long-range structural insight. The Cs "belongs as much to the opening Eb triad-derived material as it does to subsequent half-step-derived material" — but Epstein forces an either/or reading.</p>
+
+      <div class="callout concept" data-type="Key Analytical Move">
+        <div class="callout-title">The Eroica Cs: A Surface Reading</div>
+        <p>Rather than assigning the chromatic Cs to one structural category or another, a surface reading holds both simultaneously. Two options present themselves via PCX:</p>
+        <p><strong>Option 1:</strong> Respell Cs as Db → the opening Eb triad becomes a seventh chord (Eb–G–Bb–Db), which then points toward a resolving partner (Ab) or displacing partner. This implies agential hostility toward the opening stability.</p>
+        <p><strong>Option 2:</strong> Keep Cs as-is → treat it as the third of a new chord (diminished seventh or dominant ninth), as the beginning of half-step-derived material. The Cs participates in a <em>new</em> harmonic state rather than destabilizing the old one.</p>
+        <p>The key insight: these options coexist. The surface doesn't resolve into one reading — it holds the tension productively.</p>
+      </div>
+
+      <h3>Against Two Dominant Methods</h3>
+      <p>The chapter positions its surface-level approach against two canonical analytical traditions:</p>
+
+      <p><strong>Schenkerian analysis</strong> posits deeply embedded hierarchical structures (the <em>Urlinie</em>, the <em>Ursatz</em>) that govern surface events. Deep structures are rendered more important than surface elements through a specific notational system. The problem: this systematically subordinates the drama of the surface to a "larger structure."</p>
+
+      <p><strong>Schoenbergian Grundgestalt analysis</strong> tracks organic motivic development from a central generative cell. The problem is similar: even detailed surface observations ultimately serve to demonstrate the reach of the motivic germ rather than attending to immediate musical events.</p>
+
+      <blockquote>
+        "Both Schenkerian and Schoenbergian analysis filter the musical surface through theoretical apparatuses that privilege a deeper structure. By doing so, each lessens the dramatic import of the surface itself."
+        <cite>— Chapter 1</cite>
+      </blockquote>
+    </div>
+
+    <!-- CH1 PCX PAGE -->
+    <div class="page" id="page-ch1-pcx">
+      <span class="chapter-label">Chapter 1 · Method I</span>
+      <h2 class="chapter-title">Pitch-Class Counterpoint</h2>
+      <div class="chapter-subtitle">After William Benjamin — a surface-level harmonic technology</div>
+      <hr class="divider">
+
+      <div class="callout concept" data-type="Definition">
+        <div class="callout-title">Pitch-Class Counterpoint (PCX)</div>
+        <p>Developed from William Benjamin's theory, PCX describes harmony through the lens of pitch-class motion rather than functional voice-leading. Rather than asking "where does this chord resolve?" in a linear/prolongational sense, PCX asks: what are the <em>direct</em> harmonic relationships available to each chord at the surface?</p>
+        <p>Every harmonic state has potential <strong>partners</strong>: either a <strong>resolving pair</strong> (where one chord spawns a root a directed P5 away, mimicking V–I motion) or a <strong>displacing pair</strong> (where a chord's seventh descends by step to generate a new chord).</p>
+      </div>
+
+      <h3>Two Models of PCX Notation</h3>
+
+      <p>PCX is rendered in two complementary notational systems:</p>
+
+      <p><strong>The Abstract Model</strong> presents idealized counterpoint where each voice moves along its (mostly) stepwise path. Beamed pitches show spawned notes; open noteheads tied to filled noteheads signal forthcoming displacement. This is the "clean" version — counterpoint as it ought to move if the surface were perfectly regular.</p>
+
+      <p><strong>The Surface Model</strong> represents pitch-class counterpoint close to the actual score, accounting for register, octave displacement, and pitches that don't fit cleanly into approved PCX routes. It shows the messiness of real music without sacrificing the analytical precision of the abstract model.</p>
+
+      <h3>Resolving and Displacing Pairs</h3>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-card-label">Resolving Pair</div>
+          <div class="summary-card-content">A dominant seventh chord <strong>spawns</strong> a root a directed PC-5 away (e.g., C → F, Eb → Ab). This mimics V–I motion and implies forward motion, goal-directedness, hierarchical closure.</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-label">Displacing Pair</div>
+          <div class="summary-card-content">A chord's seventh descends by step to generate a new chord (e.g., Rameau's <em>double emploi</em>). This implies lateral motion, ambiguity, the sense of harmonic substitution rather than resolution.</div>
+        </div>
+      </div>
+
+      <h3>Why PCX for Surface Analysis?</h3>
+      <p>Unlike Schenkerian analysis, PCX does not require a hierarchical framework — it doesn't need to know where a passage is "going" in order to analyze its immediate harmonic content. Each chord is analyzed in terms of what it directly does, not what it ultimately means. This makes PCX especially suited to moments where traditional analysis would note "ambiguity" and move on; PCX dwells in that ambiguity and maps its contours.</p>
+
+      <div class="callout concept" data-type="Example Application">
+        <div class="callout-title">PCX on the Egmont Introduction (mm. 1–5)</div>
+        <p>The opening five measures of the overture, taken through a PCX lens, reveal that the seemingly confident forte unison on F is harmonically ambiguous: it makes no commitment to major or minor, the tonicization of bIII in measure 3 raises the possibility that Ab is tonic, and the first dominant arrives in second inversion without a third.</p>
+        <p>PCX models this as an accumulation of chordal sevenths: the motion i → bIII → v in F minor actually collects pitch classes [F – Ab – C – Eb – G] — a tonic ninth chord that grows rather than progresses. The ambiguity isn't a structural weakness; it's the analytical subject itself.</p>
+      </div>
+    </div>
+
+    <!-- CH1 MOPS PAGE -->
+    <div class="page" id="page-ch1-mops">
+      <span class="chapter-label">Chapter 1 · Method II</span>
+      <h2 class="chapter-title">Maximal Outerplanar Graphs</h2>
+      <div class="chapter-subtitle">From graph theory — visualizing musical hierarchy at the surface</div>
+      <hr class="divider">
+
+      <div class="callout concept" data-type="Definition">
+        <div class="callout-title">What is a Maximal Outerplanar Graph (MOP)?</div>
+        <p>A MOP is a special graph drawn from graph theory with two defining properties: (1) every vertex (representing a musical event) touches the <strong>outer edge</strong> of the graph — no vertex is "trapped inside." (2) No edges cross each other (<strong>planarity</strong>). The graph contains the maximum number of edges possible given its number of vertices: the formula 2n–3 (where n = number of vertices) yields this maximum.</p>
+        <p>The result is a triangulated, convex structure that represents hierarchical relationships between musical events while keeping all events visible and accessible — a formal analogue to "trusting the surface."</p>
+      </div>
+
+      <h3>Why MOPs Mirror Musical Experience</h3>
+      <p>The prohibition on crossing edges in MOPs is directly analogous to Schenkerian practice: crossing slurs between non-adjacent structural events are considered errors because they don't reflect linear musical experience. MOPs formalize this constraint geometrically.</p>
+
+      <p>But unlike Schenkerian graphs, which push surface events to the periphery to reveal deep structures at the center, MOPs keep every musical event on the outer edge. Nothing is buried. Hierarchy is expressed through <em>depth within the graph</em> — deeper placement indicates greater structural importance — but all elements remain equally accessible.</p>
+
+      <h3>Graph Shapes and What They Mean</h3>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-card-label">Right Fan</div>
+          <div class="summary-card-content">Successive nodes added top-to-bottom at the far right. Implies that the rightmost (latest) element is the structural culmination, with earlier events pointing toward it in a linear progression.</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-label">Tortoise</div>
+          <div class="summary-card-content">Symmetrical expansion of the base triangle. Implies balanced hierarchy — two events are equally structurally significant, rather than one dominating. Changes our hearing dramatically: used on the Egmont introduction, it elevates bIII to the same hierarchical level as the dominant.</div>
+        </div>
+      </div>
+
+      <h3>MOPs and PCX Together</h3>
+      <p>MOPs provide long-range hierarchical perspective; PCX provides immediate surface harmonic focus. On their own, they pull in different directions (MOPs are deeply committed to hierarchy; PCX resists prolongational thinking). Together, with REMY as the bridge, they create what Williams calls a "layered analytical perspective" — one that can hold surface detail and structural overview simultaneously without reducing one to the other.</p>
+
+      <div class="callout concept" data-type="The Key Insight">
+        <div class="callout-title">Depth as Structural Importance</div>
+        <p>In a MOP, elements appearing <em>higher</em> in the graph are more structurally important; elements appearing <em>lower</em> (deeper) are less so. This creates a visual hierarchy that can be read at a glance — and crucially, can be <em>redrawn</em> with different elements to create different analytical hearings of the same passage. The analyst's choices about what counts as a "vertex" shape the entire interpretation.</p>
+      </div>
+    </div>
+
+    <!-- CH1 AGENCY PAGE -->
+    <div class="page" id="page-ch1-agency">
+      <span class="chapter-label">Chapter 1 · Part 1.2</span>
+      <h2 class="chapter-title">Musical Agency</h2>
+      <div class="chapter-subtitle">After Monahan, Maus, Cone, and Lewin</div>
+      <hr class="divider">
+
+      <p>Analysis without agency, Williams argues, risks treating surface events as Newtonian mechanical forces — cold, transactional, without sentience. The leading tone rises to the tonic not because it <em>wants</em> to, but because of "magnetism." Steve Larson's "musical forces" (gravity, magnetism, inertia) explicitly model motion this way. Victor Zuckerkandl similarly describes music as kinetic: "not tones, then, are properly the elements of melodies, but tone-to-tone motions."</p>
+
+      <p>The problem: if surface events are tiny (small relatively as atoms are "small"), the temptation is to treat them like subatomic particles — lifeless. Williams resists this by insisting on an agential framework that grants surface elements sentience and dramatic capacity.</p>
+
+      <div class="callout concept" data-type="Monahan's Four Agent Classes">
+        <div class="callout-title">The Agent Class System (After Monahan 2013)</div>
+        <p><strong>Work-Persona:</strong> The piece itself as a unified agent — a central consciousness that "acts" through its musical events. Updates Cone's "master persona" to include oppositional elements.</p>
+        <p><strong>Fictional Composer:</strong> Beethoven-as-imagined, whose compositional choices are narrated as deliberate acts (e.g., "Beethoven chose this harmony to evoke pastoral density").</p>
+        <p><strong>Fictional Analyst:</strong> The analyst who enters the story, making their interpretive stance part of the drama. When the analyst becomes a character, their choices become musical events.</p>
+        <p><strong>Individuated Element:</strong> Small musical objects (a chord, a crescendo, a single pitch like the Eroica's Cs) treated as agents with their own agential identity and backstory.</p>
+      </div>
+
+      <h3>Markedness and Agential Backstory</h3>
+      <p>Following Robert Hatten, musical markedness — the asymmetric relationship between a neutral "unmarked" term and a more specific "marked" term (as minor is "marked" relative to major) — provides agential elements with a backstory. The Picardy third doesn't just surprise; as an <em>individuated element</em>, its agential identity is shaped by its oppositional relationship to the minor mode it replaces. Markedness, in this sense, is narrative infrastructure.</p>
+
+      <h3>Lewin's Second Person and Butor's Narrative</h3>
+      <p>The decisive move toward the second person comes from David Lewin's theatrical analyses of Beethoven's Fifth, where he writes directly to the reader as musical participant: <em>"You enter magnificently, surrounded by a prolonged hammering diminished-seventh chord..."</em></p>
+
+      <p>Michel Butor's 1957 novel <em>La Modification</em>, written entirely in the second person, provides the literary analogue. For Butor, second person narration is "didactic" — it tells the reader something about themselves they don't yet know. Williams adopts this stance: the REMY sequences tell the analyst something about the music by making the analyst live through it.</p>
+
+      <blockquote>
+        "There can exist a narrative in the second person, a narrative which will consequently be didactic."
+        <cite>— Michel Butor, "The Second Case," <em>New Left Review</em> (1965)</cite>
+      </blockquote>
+    </div>
+
+    <!-- CH1 REMY PAGE -->
+    <div class="page" id="page-ch1-remy">
+      <span class="chapter-label">Chapter 1 · REMY</span>
+      <h2 class="chapter-title">REMY</h2>
+      <div class="chapter-subtitle">Reactive-Environment-Musical-You — a fictional mixed-reality machine</div>
+      <hr class="divider">
+
+      <div class="callout remy" data-type="What is REMY?">
+        <div class="callout-title">The Machine</div>
+        <p>REMY is a <strong>fictional</strong> mixed-reality program that serves as the analytical medium of Chapter 2. It takes two inputs — a musical score analyzed via PCX and MOPs — and outputs an immersive mixed-reality experience that transforms the user's real-world environment into a historically situated analytical narrative.</p>
+        <p>It is explicitly not a real software product, and explicitly distinct from Robert Hatten's "virtual agency" (which aims to recover a work's own virtual agency, rather than construct a user-personalized experience).</p>
+      </div>
+
+      <h3>How REMY Works (Conceptually)</h3>
+      <p>REMY operates through three layers:</p>
+
+      <p><strong>1. Score Input:</strong> REMY analyzes the musical score harmonically via PCX, identifying resolving and displacing pairs throughout a passage. It also generates MOPs for the same passage, identifying structural hierarchies.</p>
+
+      <p><strong>2. Agent Class Selection:</strong> The user selects an agential stance — work-persona, fictional composer, fictional analyst, or individuated element. This choice transforms how the mixed-reality output is rendered. Selecting "individuated element: crescendo" produces an ever-brightening world; selecting "fictional composer" produces a world filtered through Beethoven's imagined compositional consciousness.</p>
+
+      <p><strong>3. Mixed-Reality Output:</strong> REMY overlays the user's real-world environment with historically appropriate visual and auditory elements. In the Egmont analyses, this means 16th-century Brussels superimposed on Discovery Park in Seattle. The output is non-deterministic — no two users experience identical REMY outputs, which is described as a feature, not a bug.</p>
+
+      <h3>REMY and Time Dilation</h3>
+      <p>REMY operates in a "pseudo-dream-state" that warps musical time. Five measures of music may take minutes to process if the harmonic content is dense. Williams borrows Christopher Nolan's <em>Inception</em> (2010) as a structural analogy: dream time runs slower than real time, allowing the analyst to inhabit a small musical excerpt for an extended duration.</p>
+
+      <div class="remy-narrative">
+        <p>You are walking through the woods in the middle of the afternoon. Here in nature among trees, open fields, and wild animals you begin to let go of your quotidian worries: you start to forget. You forget the unfinished TPS report on your desk and the endless stream of emails flooding your inbox. In place of these small, twenty-first century burdens is a refreshed connection to nature, to your thoughts, and to a world far away from your adult responsibilities.</p>
+        <p>You remove the mixed reality headset from your pack and put it on your head, checking to make sure it is paired with your phone. You recently installed REMY...</p>
+        <p class="remy-annotation">(from Chapter 1's first REMY demonstration — analyzing Beethoven's Op. 59, no. 1, as the fictional composer agent class)</p>
+      </div>
+
+      <h3>REMY vs. Hatten's Virtual Agency</h3>
+      <p>Hatten's virtual agency aims to describe "the experience of virtual agency <em>in</em> the music itself" — what the work does as a quasi-agential structure. REMY, by contrast, generates an experience <em>for the user</em>, unique to each user's environment and agent-class selection. For Hatten, the virtual experience is in the music; for REMY, the virtual experience is constructed at the intersection of music, real world, and analytical choice.</p>
+    </div>
+
+    <!-- CH2 INTRO -->
+    <div class="page" id="page-ch2-intro">
+      <span class="chapter-label">Chapter 2</span>
+      <h2 class="chapter-title">Egmont &amp; Egmont</h2>
+      <div class="chapter-subtitle">Beethoven's overture meets the Dutch Revolt</div>
+      <hr class="divider">
+
+      <p>Chapter 2 puts the dissertation's full apparatus — PCX, MOPs, REMY, and the four agent classes — to work on Beethoven's Egmont overture. The chapter is organized around the overture's formal sections (introduction, exposition, recapitulation, coda) and pairs each section with its corresponding historical context from the Dutch Revolt.</p>
+
+      <div class="callout summary" data-type="Chapter Argument">
+        <div class="callout-title">The Central Reinterpretation</div>
+        <p>Traditional hearings of the Egmont overture culminate in the coda's triumphant "Victory Symphony" — the minor-to-major turn at the end as Egmont's martyrdom becomes meaningful. Williams argues this reading is historically untenable: Count Egmont died, and the tyranny that killed him intensified afterward under Duke Alba. The "victory" is at best ambiguous, at worst an imposed fiction. Read through the lens of the <em>stadsvrede</em> — the "peace within the walls" enforced by power — the major-mode coda is not triumph but coercion.</p>
+      </div>
+
+      <h3>The Analytical Framework of Chapter 2</h3>
+      <p>The chapter follows a consistent structure for each section of the overture:</p>
+      <p><strong>History:</strong> A narrative account of the relevant historical events from the Dutch Revolt, drawing primarily on Peter Arnade's <em>Beggars, Iconoclasts, and Civic Patriots</em>.</p>
+      <p><strong>Music:</strong> A technical PCX and MOP analysis of the overture section, demonstrating how surface-level features embody the historical moment.</p>
+      <p><strong>REMY:</strong> A second-person narrative in which the reader, wearing REMY, experiences the music as a participant in the historical events — usually positioned as a member of the Order of the Compromise/Beggars or a citizen of Brussels.</p>
+
+      <h3>The Structural Parallel</h3>
+      <p>Williams identifies a formal homology between the historical events and the overture's form:</p>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-card-label">Introduction</div>
+          <div class="summary-card-content">The Beggars' appropriation of the "Joyous Entry" to submit their petition to Margaret of Parma — a slipshod but hopeful use of monarchial tools. Musical analogue: harmonic ambiguity between F minor, Ab, and unstable dominant.</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-label">Exposition</div>
+          <div class="summary-card-content">The 1566 Beeldenstorm — iconoclasm as physical, destructive appropriation of Catholic symbols. Musical analogue: the primary and secondary themes as competing agencies, destruction and response.</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-label">Recapitulation</div>
+          <div class="summary-card-content">Duke Alba's arrival and the Council of Troubles — repression dressed as order. Musical analogue: the secondary theme now in bVI rather than bIII, a "non-resolving recapitulation" per Hepokoski.</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-label">Coda</div>
+          <div class="summary-card-content">The <em>stadsvrede</em> — imposed peace, false victory. Musical analogue: the "Victory Symphony" in F major reread as coerced positivity, not genuine triumph.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CH2 HISTORY -->
+    <div class="page" id="page-ch2-history">
+      <span class="chapter-label">Chapter 2 · History</span>
+      <h2 class="chapter-title">The World Behind the Overture</h2>
+      <div class="chapter-subtitle">Sacred monarchy, Protestant revolt, and the image-breakers of 1566</div>
+      <hr class="divider">
+
+      <h3>The Monarchy's Tools of Power</h3>
+      <p>The Spanish Habsburg monarchy in the Low Countries built its authority through a complex of physical, ceremonial, and theological practices. Three are especially important for understanding the overture:</p>
+
+      <p><strong>The Amende honorable:</strong> A public humiliation ritual in which citizens were forced to appear in undergarments and beg forgiveness before their superiors. Used by Charles the Bold against Liège (1467) and by Charles V against Ghent (1540). It made disobedience physically shameful and publicly visible — a theatrical demonstration of absolute power.</p>
+
+      <p><strong>City-wide processions:</strong> Celebrations of Catholic feast days, increasingly co-opted by the nobility to display their direct connection to God. Artists created <em>tableaux vivants</em>; printers produced commemorative booklets; the city's religious community processed together. These events conflated civic identity with Catholic identity.</p>
+
+      <p><strong>The Joyous Entry:</strong> Originally a contract between duke and city — the duke's entry into a city required urban legal approval. Over time, by transforming the entry into "a kind of holy apotheosis," the ritual became "more biblical covenant than feudal contract" (Arnade). What had been a legal right became a religious obligation.</p>
+
+      <div class="callout history" data-type="Key Historical Dynamic">
+        <div class="callout-title">Tools Appropriated: The Beggars' Counter-Joyous Entry</div>
+        <p>In April 1566, the Order of the Compromise staged their own "Joyous Entry" on Palm Sunday weekend — deliberately occupying the ceremonial space of royal processions to submit their petition. They distributed handbills, marched to Margaret of Parma's residence, and demanded religious toleration using the monarchy's own ritual language. The gambit worked: Margaret conceded.</p>
+        <p>Williams reads this as the structural model for Beethoven's introduction: an attempted appropriation of regal tools by those who don't fully command them — hence the harmonic ambiguity, the minor dominant, the slipshod confidence of bIII. "The Beggars did the best they could with a tool they did not yet fully understand."</p>
+      </div>
+
+      <h3>The Beeldenstorm: Image-Breaking as Analysis</h3>
+      <p>The "Wonder Year" of 1566 saw waves of Protestant iconoclasm across the Low Countries. The image-breakers (Beeldenstormers) destroyed Catholic church objects, defaced paintings, and performed rites of inversion — dunking sacred statues in baptismal fonts, baptizing them, "proving" their mere physicality.</p>
+
+      <blockquote>
+        "Whether a holy presence existed within the objects was '…the most urgent matter at hand, one that was fought bitterly in the heat of riot and other social arenas as much as from the pulpit or the theologian's treatise.'"
+        <cite>— Chapter 2, citing scholarship on the Beeldenstorm</cite>
+      </blockquote>
+
+      <p>The key point: the iconoclasts were not primarily interested in destroying art. They were making a theological argument through physical means — demonstrating that the objects the monarchy claimed were imbued with divine power were, in fact, just wood, stone, and cloth. The destruction was analytical.</p>
+
+      <p>Williams draws a parallel to a 1981 incident: a man slashed Bryan Organ's portrait of Princess Diana. He knew "that by attacking the image of Princess Diana somehow the dishonour would accrue to her as well." The physical object and the represented person are linked, but not identical. The iconoclasts knew this too — they were attacking the <em>image</em> of Catholicism, not Catholics themselves.</p>
+
+      <h3>The Sacrament House as Analytical Object</h3>
+      <p>The sacrament house — a tall, ornate cabinet housing the consecrated Host — was a particularly popular target of the Beeldenstormers. As both a functional object and a display of religious and civic wealth, it embodied the intersection of Catholic theology and Habsburg power. Its destruction was therefore doubly meaningful: theological argument and political act simultaneously. Williams uses this in the exposition analysis.</p>
+    </div>
+
+    <!-- CH2 INTRODUCTION SECTION -->
+    <div class="page" id="page-ch2-introduction">
+      <span class="chapter-label">Chapter 2 · Analysis</span>
+      <h2 class="chapter-title">Egmont's Introduction</h2>
+      <div class="chapter-subtitle">Measures 1–24: Ambiguity, appropriation, and the Order of the Beggars</div>
+      <hr class="divider">
+
+      <h3>The Music</h3>
+      <p>The overture's introduction is in F minor, in 3/2 time, marked <em>sostenuto ma non troppo</em>. It opens with a forte unison on F and proceeds through sarabande rhythms before dissolving into polyphonic free-form diminutions, then returning to the sarabande, then dissolving again, before the closing melody of measures 15–24 that seeds material for the entire rest of the work.</p>
+
+      <div class="callout concept" data-type="Analytical Focus">
+        <div class="callout-title">Harmonic Ambiguity in mm. 1–5</div>
+        <p>The opening five measures present a cascade of harmonic instabilities:</p>
+        <p>• The initial unison F reveals no mode (major or minor)</p>
+        <p>• Measure 3 tonicizes bIII (Ab major), raising the possibility that Ab is the true tonic</p>
+        <p>• The first dominant in F appears in second inversion (harmonically weak)</p>
+        <p>• Measure 5 confirms the dominant but without a third — a bare fifth, even more ambiguous</p>
+        <p>PCX models this as an accumulation of chordal sevenths: i → bIII → v in F minor collects pitch classes building toward a tonic ninth [F–Ab–C–Eb–G]. The opening is not progressing toward clarity; it is acquiring complexity.</p>
+      </div>
+
+      <h3>Two MOP Readings</h3>
+      <p>Williams provides two competing MOP interpretations of measures 1–5, demonstrating how the same passage yields different structural hearings:</p>
+
+      <p><strong>The Right Fan:</strong> Places the secondary dominant in measure 4 as the most structurally important event, with bIII in a weaker hierarchical position despite its rhythmic accent. This prioritizes goal-directedness — the passage aims toward the dominant.</p>
+
+      <p><strong>The Tortoise:</strong> Symmetrical structure placing bIII and the dominant on equal hierarchical levels. This reading dramatically elevates the importance of bIII — "a greater point of interest than the tonicization of dominant." This changes our hearing: the ambiguity is structural, not incidental.</p>
+
+      <p>Williams argues that PCX corroborates the Tortoise: the contrapuntal motion treats the intermediary dominants as supporting structures for the larger seventh-accumulation, not as structural goals in themselves.</p>
+
+      <h3>The Sarabande and Free-Form Sections</h3>
+      <p>Calhoun (1987) notes that Beethoven's 3/2 time signature in the introduction evokes the Spanish sarabande, with its characteristic emphasis on beat two. This is significant: the sarabande is a court dance, a symbol of regal authority. Beethoven invokes monarchial rhythm.</p>
+
+      <p>Interspersed with the sarabande sections are passages of free-form polyphony (measures 5–8, 12–14). Williams reads these as representing the Beggars' imperfect mastery of their borrowed tool: "the music's stately characteristics mixed with less regulated musical moments" mirror "the Beggars [who] did the best they could with a tool they did not yet fully understand."</p>
+
+      <div class="remy-narrative">
+        <p>You begin by moving on your wooded path with a dramatized sense of importance. The strong, forte unison on F followed by the sarabande rhythms occurring in measures 2–5 resemble something made for a royal entrance.</p>
+        <p class="remy-annotation">(REMY starts to transform your environment to match the music)</p>
+        <p>The trees surrounding you acquire new shapes attached to their trunks. You see outlines of old, 16th-century houses forming while the wooded trails around you transform into cobble-stone roads. As people walk past you in the woods, REMY models them as citizens of Brussels in the authentic garb. While you never "leave" present-day Seattle, REMY transforms the woods into a realistic mixed-reality of 1566 Brussels.</p>
+        <p class="remy-annotation">(a leaf on the ground transforms into a handbill, encouraging citizens to join the gathering of the Compromise of Nobility)</p>
+        <p>You participate in the advertised gathering, and more and more people join your side as you continue your walk... Such an accumulation of people mirrors the pitch-class counterpoint's chordal seventh acquisitions in measures 1–5.</p>
+      </div>
+
+      <h3>The Closing Melody (mm. 15–24)</h3>
+      <p>Oster's Schenkerian analysis identifies the violin motive in measure 15 as a crucial seed producing the introduction, primary theme, secondary theme, and coda. Williams concedes this insight but argues it "misses immediate interesting moments such as the Bb minor pivot harmony in measure 19" — a surface event with its own dramatic significance that Oster's long-range focus obscures.</p>
+
+      <p>The eighth+quarter rhythmic gesture in measures 22–23 (horns and strings) accents beats one and three in 3/2, presaging similar accents in the 4/4 coda. This connection is not available to Schenkerian analysis because it links rhythmic surface elements across large formal spans — exactly the kind of connection that requires a surface-level orientation to perceive.</p>
+    </div>
+
+    <!-- CH2 EXPOSITION -->
+    <div class="page" id="page-ch2-exposition">
+      <span class="chapter-label">Chapter 2 · Analysis</span>
+      <h2 class="chapter-title">Exposition &amp; Beeldenstorm</h2>
+      <div class="chapter-subtitle">Primary theme, secondary theme, and the wonder year of 1566</div>
+      <hr class="divider">
+
+      <p>The exposition analysis extends the historical-musical parallel established in the introduction. Where the introduction mapped onto the Beggars' hopeful petition, the exposition maps onto the destructive and reactive energies of the 1566 Beeldenstorm.</p>
+
+      <div class="callout history" data-type="Historical Context">
+        <div class="callout-title">The Beeldenstorm as Musical Structure</div>
+        <p>The image-breaking of 1566 involved both <strong>action</strong> (iconoclasm: destruction of Catholic objects) and <strong>reaction</strong> (responses from monarchists, moderate Catholics, civic authorities, and Protestant groups trying to contain the chaos). Williams reads the exposition's primary and secondary themes as encoding this dialectic.</p>
+        <p>The primary theme in F minor: the destructive, disruptive energy of the iconoclasts. The secondary theme in bIII (Ab major): the more measured, reactive response — the attempt to contain, reframe, or absorb the destruction.</p>
+      </div>
+
+      <h3>The Non-Resolving Recapitulation</h3>
+      <p>A crucial structural feature of the overture is what James Hepokoski calls its "nonresolving recapitulation": the secondary theme in the recapitulation appears in bVI (Db major) rather than the tonic F minor/major, and the piece never presents the secondary theme in the tonic. This formal anomaly — unusual in sonata practice — supports Williams's reading of the coda as problematic.</p>
+
+      <p>If the recapitulation "should" resolve by bringing the secondary theme home to the tonic, and it doesn't, then the overture is structurally unresolved throughout the Victory Symphony coda. The coda's major-mode brightness is superimposed on a form that has not closed.</p>
+
+      <h3>The Coda as Stadsvrede</h3>
+
+      <div class="callout history" data-type="Key Reinterpretation">
+        <div class="callout-title">The Victory Symphony Reconsidered</div>
+        <p>A <em>stadsvrede</em> — "peace within the walls" — was a temporary truce imposed on a city during a period of civil conflict, typically by an external authority. It was peace as coercion rather than peace as resolution.</p>
+        <p>Williams argues that the coda's F major "Victory Symphony" is a <em>stadsvrede</em>: an imposed celebration that doesn't emerge from the work's structural logic (the non-resolving recapitulation) or historical truth (Count Egmont was executed; Duke Alba's repression followed). The brightness is real but it is the brightness of imposed order, not genuine liberation.</p>
+        <p>This reinterpretation is the dissertation's most striking contribution: it takes the historically best-known moment of the overture and inverts its traditional meaning.</p>
+      </div>
+    </div>
+
+    <!-- GLOSSARY PAGE -->
+    <div class="page" id="page-glossary-page">
+      <span class="chapter-label">Reference</span>
+      <h2 class="chapter-title">Key Terms Index</h2>
+      <hr class="divider">
+      <p>All major terms from the dissertation. Click any term for the full definition.</p>
+      <br>
+      <div id="full-glossary"></div>
+    </div>
+
+  </div><!-- /content -->
+
+  <div id="footer-nav">
+    <button class="nav-btn" id="prev-btn" onclick="prevPage()" disabled>← Previous</button>
+    <div id="page-indicator">1 / 12</div>
+    <button class="nav-btn" id="next-btn" onclick="nextPage()">Next →</button>
+  </div>
+</div>
+
+<!-- GLOSSARY PANEL -->
+<div id="glossary-panel">
+  <div id="glossary-header">
+    <h3>Quick Glossary</h3>
+    <button id="glossary-close" onclick="toggleGlossary()">×</button>
+  </div>
+  <div id="glossary-search">
+    <input type="text" placeholder="Search terms..." id="glossary-input" oninput="filterGlossary(this.value)">
+  </div>
+  <div id="glossary-list"></div>
+</div>
+
+<script>
+const pages = [
+  { id: 'abstract', section: 'Front Matter', label: 'Abstract & Overview' },
+  { id: 'preface', section: 'Front Matter', label: 'Preface' },
+  { id: 'timeline', section: 'Front Matter', label: 'Low Countries Timeline' },
+  { id: 'ch1-surface', section: 'Chapter 1', label: 'The Musical Surface' },
+  { id: 'ch1-pcx', section: 'Chapter 1', label: 'Pitch-Class Counterpoint' },
+  { id: 'ch1-mops', section: 'Chapter 1', label: 'Maximal Outerplanar Graphs' },
+  { id: 'ch1-agency', section: 'Chapter 1', label: 'Musical Agency' },
+  { id: 'ch1-remy', section: 'Chapter 1', label: 'REMY — The Machine' },
+  { id: 'ch2-intro', section: 'Chapter 2', label: 'Egmont & Egmont' },
+  { id: 'ch2-history', section: 'Chapter 2', label: 'Historical Context' },
+  { id: 'ch2-introduction', section: 'Chapter 2', label: 'Overture Introduction' },
+  { id: 'ch2-exposition', section: 'Chapter 2', label: 'Exposition & Beeldenstorm' },
+  { id: 'glossary-page', section: 'Reference', label: 'Key Terms Index' },
+];
+
+const glossaryData = [
+  { term: 'Musical Surface', def: 'In Williams\'s restricted definition: the notes and chords on the score — counterpoint and harmony — as distinct from timbre, orchestration, or performance. The site of immediate musical drama before any analytical framework is applied.', tag: 'theory' },
+  { term: 'Pitch-Class Counterpoint (PCX)', def: 'After William Benjamin. A harmonic analytical method that models chord relationships through pitch-class motion rather than functional prolongation. Chords pair as "resolving pairs" (one chord spawning a root a directed P5 away, mimicking V–I) or "displacing pairs" (a chord\'s seventh descending by step to generate a new chord).', tag: 'method' },
+  { term: 'Maximal Outerplanar Graph (MOP)', def: 'From graph theory. A graph where all vertices touch the outer edge (outerplanar) and edges do not cross (planar), with the maximum number of edges possible. Used to visualize musical hierarchy: deeper placement = greater structural importance. All events remain accessible on the outer edge.', tag: 'method' },
+  { term: 'Resolving Pair', def: 'A PCX relationship where a dominant seventh chord "spawns" a root a directed PC-5 away (e.g., C→F, Eb→Ab), mimicking V–I motion. Implies forward motion, goal-directedness, hierarchical closure.', tag: 'method' },
+  { term: 'Displacing Pair', def: 'A PCX relationship where a chord\'s seventh descends by step to generate a new chord (after Rameau\'s double emploi). Implies lateral motion, harmonic substitution rather than resolution, ambiguity.', tag: 'method' },
+  { term: 'REMY', def: 'Reactive-Environment-Musical-You. A fictional mixed-reality program that synthesizes PCX analyses, MOP graphs, and agent-class selection into immersive second-person analytical narratives. Users select an agential stance and experience historical environments overlaid on their real-world surroundings. Not a real software product.', tag: 'method' },
+  { term: 'Work-Persona', def: 'Monahan\'s update to Cone\'s "master persona." The musical work itself understood as a unified, active agent — a consciousness that chooses to act, not merely a structure that unfolds. Includes the possibility of oppositional elements acting against the central persona.', tag: 'agency' },
+  { term: 'Fictional Composer', def: 'One of Monahan\'s four agent classes. Beethoven-as-imagined, whose compositional choices are narrated as deliberate acts. Using this class in REMY means experiencing the music as though you are making Beethoven\'s compositional decisions.', tag: 'agency' },
+  { term: 'Fictional Analyst', def: 'One of Monahan\'s four agent classes. The analyst who enters the analytical narrative, making their interpretive stance part of the drama itself. When the analyst becomes a character, their choices become musical events.', tag: 'agency' },
+  { term: 'Individuated Element', def: 'One of Monahan\'s four agent classes. Small musical objects — a chord, a pitch, a crescendo, a dynamic — treated as agents with their own agential identity, backstory, and capacity for action.', tag: 'agency' },
+  { term: 'Markedness', def: 'After Hatten. The asymmetric relationship between an "unmarked" (neutral, broad) term and a "marked" (specific, narrow) term. E.g., major mode is unmarked (many possible meanings: pastoral, comic, etc.); minor mode is marked (narrow: tragic). Markedness provides agential elements with a backstory that shapes their dramatic significance.', tag: 'theory' },
+  { term: 'Grundgestalt', def: 'Schoenberg\'s concept: a central motivic "basic shape" or germ from which a work\'s thematic and motivic content organically develops. Williams critiques Grundgestalt analysis for subordinating surface events to their relationship with the generating cell.', tag: 'theory' },
+  { term: 'Schenkerian Analysis', def: 'An analytical method developed by Heinrich Schenker positing deeply embedded hierarchical structures (the Ursatz — fundamental structure, typically I–V–I with stepwise melodic descent) that govern all surface events. Williams critiques it for pushing surface drama to the margins in service of deep structural claims.', tag: 'theory' },
+  { term: 'Beeldenstorm', def: 'The "image-storms" or iconoclastic riots of 1566 in the Dutch Low Countries, in which Protestant mobs destroyed Catholic church objects, statues, and artworks. The "Wonder Year" — a watershed event that precipitated Spanish Habsburg repression and eventually Count Egmont\'s execution.', tag: 'history' },
+  { term: 'Joyous Entry', def: 'Originally a legal contract between a duke and a city, wherein urban approval was required for all important acts. Over time, as the Habsburgs transformed it into a religious spectacle, it became "more biblical covenant than feudal contract" — a tool of sacred monarchial authority. Appropriated by the Order of the Compromise in April 1566.', tag: 'history' },
+  { term: 'Amende honorable', def: 'A public humiliation ritual in which citizens were forced to appear in undergarments and beg forgiveness from superiors. Used to demonstrate absolute monarchial power and strip citizens of imagined independence. A theatrical assertion of hierarchy.', tag: 'history' },
+  { term: 'Stadsvrede', def: '"Peace within the walls" — a temporary truce imposed on a city by external authority during civil conflict. Used by Williams to reinterpret the Egmont coda\'s "Victory Symphony": not genuine triumph but imposed peace, the sound of coercive order wearing the costume of celebration.', tag: 'history' },
+  { term: 'Non-Resolving Recapitulation', def: 'After Hepokoski. A sonata-form anomaly in which the secondary theme never appears in the tonic key during the recapitulation. In Egmont, the secondary theme appears in bVI (Db major) in the recapitulation rather than tonic F minor/major, leaving the form structurally unresolved throughout the coda.', tag: 'theory' },
+  { term: 'Second Person Narration', def: 'A narrative mode in which the reader is addressed as "you," collapsing the distance between narrator and protagonist. Williams borrows this from David Lewin\'s theatrical analyses and Michel Butor\'s novel La Modification. The second person makes the analyst a musical agent and gives analytical narratives a didactic, experiential quality.', tag: 'method' },
+  { term: 'Musical Forces', def: 'Steve Larson\'s theory of three forces governing musical motion: gravity (tendency to descend), magnetism (tendency to move toward stable tones), and inertia (tendency to continue established patterns). Williams resists this framework because it treats musical elements as Newtonian mechanisms without agential sentience.', tag: 'theory' },
+  { term: 'Right Fan', def: 'A MOP shape in which vertices are added successively from top to bottom at the far right. Implies that the rightmost (latest) event is the structural culmination — a goal-directed, teleological shape.', tag: 'method' },
+  { term: 'Tortoise', def: 'A MOP shape that expands the base triangle evenly and symmetrically. Implies balanced hierarchy between two events — neither dominates. Applied to Egmont\'s introduction, it elevates bIII to equal hierarchical status with the dominant, fundamentally changing the analytical hearing.', tag: 'method' },
+];
+
+let currentPage = 0;
+
+function navigate(pageId) {
+  const idx = pages.findIndex(p => p.id === pageId);
+  if (idx === -1) return;
+  currentPage = idx;
+  renderPage();
+}
+
+function renderPage() {
+  const p = pages[currentPage];
+  
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  
+  // Show current
+  const pageEl = document.getElementById('page-' + p.id);
+  if (pageEl) pageEl.classList.add('active');
+  
+  // Update TOC
+  document.querySelectorAll('.toc-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.page === p.id);
+  });
+  
+  // Update breadcrumb
+  document.getElementById('bc-section').textContent = p.section;
+  document.getElementById('bc-page').textContent = p.label;
+  
+  // Update progress
+  const pct = ((currentPage + 1) / pages.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  
+  // Update page indicator
+  document.getElementById('page-indicator').textContent = (currentPage + 1) + ' / ' + pages.length;
+  
+  // Update nav buttons
+  document.getElementById('prev-btn').disabled = currentPage === 0;
+  document.getElementById('next-btn').disabled = currentPage === pages.length - 1;
+  
+  // Scroll content to top
+  document.getElementById('content').scrollTop = 0;
+  
+  // Build glossary page if needed
+  if (p.id === 'glossary-page') buildFullGlossary();
+}
+
+function prevPage() {
+  if (currentPage > 0) { currentPage--; renderPage(); }
+}
+
+function nextPage() {
+  if (currentPage < pages.length - 1) { currentPage++; renderPage(); }
+}
+
+// GLOSSARY
+function toggleGlossary() {
+  const panel = document.getElementById('glossary-panel');
+  const btn = document.getElementById('glossary-toggle');
+  panel.classList.toggle('open');
+  btn.classList.toggle('active');
+  if (panel.classList.contains('open')) {
+    buildGlossaryList(glossaryData);
+  }
+}
+
+function buildGlossaryList(data) {
+  const list = document.getElementById('glossary-list');
+  list.innerHTML = data.map(g => `
+    <div class="glossary-entry">
+      <div class="glossary-term">${g.term}</div>
+      <div class="glossary-def">${g.def}</div>
+      <span class="glossary-tag tag-${g.tag}">${g.tag}</span>
+    </div>
+  `).join('');
+}
+
+function buildFullGlossary() {
+  const container = document.getElementById('full-glossary');
+  if (container.innerHTML) return;
+  container.innerHTML = glossaryData.map(g => `
+    <div class="glossary-entry" style="margin-bottom:0;border-radius:8px;margin-bottom:12px;background:var(--bg3);border:1px solid var(--border);">
+      <div class="glossary-term" style="font-size:18px;">${g.term}</div>
+      <div class="glossary-def" style="font-size:14.5px;margin-top:6px;">${g.def}</div>
+      <span class="glossary-tag tag-${g.tag}" style="margin-top:8px;display:inline-block;">${g.tag}</span>
+    </div>
+  `).join('');
+}
+
+function filterGlossary(q) {
+  const filtered = q
+    ? glossaryData.filter(g =>
+        g.term.toLowerCase().includes(q.toLowerCase()) ||
+        g.def.toLowerCase().includes(q.toLowerCase())
+      )
+    : glossaryData;
+  buildGlossaryList(filtered);
+}
+
+function showDef(key) {
+  const map = {
+    'pcx': 'Pitch-Class Counterpoint (PCX)',
+    'mops': 'Maximal Outerplanar Graph (MOP)',
+    'agency': 'Work-Persona',
+    'remy': 'REMY',
+    'grundgestalt': 'Grundgestalt',
+  };
+  const panel = document.getElementById('glossary-panel');
+  if (!panel.classList.contains('open')) toggleGlossary();
+  const term = map[key];
+  if (term) {
+    document.getElementById('glossary-input').value = term;
+    filterGlossary(term);
+  }
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextPage();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevPage();
+  if (e.key === 'g' || e.key === 'G') toggleGlossary();
+});
+</script>
+</body>
+</html>
